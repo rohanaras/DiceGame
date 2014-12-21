@@ -22,6 +22,13 @@ namespace Project1
 
         public override int[] Call()
         {
+            Random r = new Random();
+            int betOrCall = r.Next(1, 5);
+            if (betOrCall == 1)
+            {
+                int[] call = { -1, 2 }; //HACK might be unnecesarry now
+                return call;
+            }
             if (calls.Count != 0)
             {
                 int[] previous = new int[2];
