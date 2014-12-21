@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Rohan Aras
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +34,7 @@ namespace Project1
 
         /// <summary>
         /// Removes a die from the hand
+        /// Throws ArgumentException if hand doesn't have dice
         /// </summary>
         public void RemoveDie()
         {
@@ -40,6 +45,7 @@ namespace Project1
 
         /// <summary>
         /// removes dice from the hand
+        /// Throws ArgumentException if hand doesn't have enough dice
         /// </summary>
         /// <param name="number">the number of dice to be removed</param>
         public void RemoveDice(int number)
@@ -59,13 +65,17 @@ namespace Project1
                 d.Roll();
         }
 
-
         /// <returns>the current hand of dice as a list of dice</returns>
         public List<Dice> CurrentListHand()
         {
             return HandList;
         }
 
+        /// <summary>
+        /// Creates an array with an element for each possible FV.
+        /// Each element contains the amount of dice in hand with given FV.
+        /// </summary>
+        /// <returns>an integer array with Length == Dice FV()</returns>
         public int[] ArrayCountHand()
         {
             int[] count = new int[HandList.First().DiceType()];
@@ -74,6 +84,10 @@ namespace Project1
             return count;
         }
 
+        /// <summary>
+        /// Creates and array with an element for each dice
+        /// </summary>
+        /// <returns></returns>
         public int[] CurrentHandArray()
         {
             int[] hand = new int[HandList.Count];
@@ -82,11 +96,19 @@ namespace Project1
             return hand;
         }
 
+        /// <summary>
+        /// Returns a string of the current face of all dice in the hand
+        /// </summary>
+        /// <returns>a string with numbers divided by ", "</returns>
         public String CurrentHandString()
         {
             return String.Join(", ", CurrentHandArray());
         }
 
+        /// <summary>
+        /// Returns the number of dice left in the hand 
+        /// </summary>
+        /// <returns>an integer >= 0 </returns>
         public int DiceLeft()
         {
             return HandList.Count;

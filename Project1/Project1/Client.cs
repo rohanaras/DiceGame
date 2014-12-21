@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+ * Rohan Aras
+ * 
+ * This class contains all the logic to play liars dice given a list of players,
+ * their hands/dice, and a user interface.  
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,8 +115,8 @@ namespace Project1
         /// the last call
         /// </summary>
         /// <param name="playerOrder">The list of players to be rotated</param>
-        /// <param name="lastCall">The marker for the last call</param>
-        /// <param name="call"></param>
+        /// <param name="lastCall">an int array with two elements [NOD, FV]</param>
+        /// <param name="call">an int array with two elements [NOD, FV]</param>
         public static int[] MovePlayerToEnd(LinkedList<Player> playerOrder, int[] call)
         {
             playerOrder.AddLast(playerOrder.First());
@@ -120,11 +128,14 @@ namespace Project1
         /// updates player on the current gamestate so that the player can make an informed 
         /// move
         /// </summary>
-        /// <param name="callList"></param>
-        /// <param name="call"></param>
-        /// <param name="playerList"></param>
-        /// <param name="playerOrder"></param>
-        /// <param name="diceLeft"></param>
+        /// <param name="callList">A list of the pervious calls in the round, newest at 
+        /// end</param>
+        /// <param name="call">an array of the last call [NOD, FV]</param>
+        /// <param name="playerList">A list of the pervious players in the round, newest at 
+        /// end</param>
+        /// <param name="playerOrder">The list of all the current (not lost) players</param>
+        /// <param name="diceLeft">a dictionary of all the player's name and how many dice
+        /// they have left</param>
         public static void UpdatePlayerGameState(List<int[]> callList, int[] call, List<String>
             playerList, LinkedList<Player> playerOrder, Dictionary<string, int> diceLeft)
         {
@@ -138,7 +149,7 @@ namespace Project1
         /// </summary>
         /// <param name="player">the player</param>
         /// <param name="lastCall">the last call for legality purposes</param>
-        /// <returns></returns>
+        /// <returns>an int array with two elements [NOD, FV]</returns>
         public static int[] GetCall(Player player, int[] lastCall)
         {
             int[] call = null;
