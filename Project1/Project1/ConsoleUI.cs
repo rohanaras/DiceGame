@@ -171,8 +171,10 @@ namespace Project1
             Console.WriteLine(winner);
             System.IO.File.WriteAllText(@"C:\Users\Public\Documents\autosave.dg",
                 savedText);
+            Console.WriteLine();
+            Console.WriteLine("...");
             Console.WriteLine(
-                "autosave saved to C:\\Users\\Public\\Documents\\autosave.dg");
+                "... autosave saved to C:\\Users\\Public\\Documents\\autosave.dg");
             Console.ReadKey(); //todo get rid of later?
         }
 
