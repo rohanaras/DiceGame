@@ -132,14 +132,19 @@ namespace Project1
         public void HasLostDie(string playerName, int numberLeft)
         {
             string hasLostDie = playerName + " has lost a die and now has " + numberLeft
-                + " left.\n\n+-----------------------------------------------------+\n\n";
+                + " left.\n\n";
+            if (numberLeft != 0)
+                hasLostDie += "+-----------------------------------------------------+\n\n";
             savedText += hasLostDie;
             Console.Write(hasLostDie);
         }
 
         public void HasLostGame(string playerName)
         {
-            Console.WriteLine(playerName + " has 0 dice and is now out of the game.");
+            string hasLostGame = playerName + " has lost the game."
+                + "\n\n+-----------------------------------------------------+\n\n";
+            savedText += hasLostGame;
+            Console.WriteLine(hasLostGame);
         }
 
         public void GameOver(Stack<Player> players)
@@ -149,7 +154,9 @@ namespace Project1
             {
                 playerNames += p.Name() + "\n";
             }
-            Console.WriteLine("The game is now over. The following players lost: \n" + playerNames);
+            string gameOver = "The game is now over. The following players lost: \n" + playerNames;
+            savedText += gameOver;
+            Console.WriteLine(gameOver);
         }
 
         public bool NewRound()
@@ -159,7 +166,13 @@ namespace Project1
 
         public void Champion(string playerName)
         {
-            Console.WriteLine(playerName + " is the WINNER!!");
+            string winner = playerName + " is the WINNER!!";
+            savedText += winner;
+            Console.WriteLine(winner);
+            System.IO.File.WriteAllText(@"C:\Users\Public\Documents\autosave.dg",
+                savedText);
+            Console.WriteLine(
+                "autosave saved to C:\\Users\\Public\\Documents\\autosave.dg");
             Console.ReadKey(); //todo get rid of later?
         }
 
