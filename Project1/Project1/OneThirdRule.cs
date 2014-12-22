@@ -22,6 +22,11 @@ namespace Project1
                 int[] call = { -1, 2 }; //hack might not be needed
                 return call;
             }
+            if (betsThisRound[betsThisRound.Count - 1][0] == totalDiceLeft / 3)
+            {
+                int[] raise = { betsThisRound[betsThisRound.Count - 1][0] + 1, MostCommonBet() };
+                return raise;
+            }
             int[] bet = { totalDiceLeft / 3, MostCommonBet() };
             return bet;
         }
