@@ -42,9 +42,14 @@ namespace Project1
                     playerOrder.AddLast(new Human(hand, userName, this));
                     count++;
                 }
-                else if (type == "testplayer")
+                else if (type == "testplayer" || type == "tp")
                 {
                     playerOrder.AddLast(new TestPlayer(hand));
+                    count++;
+                }
+                else if (type == "onethirdrule" || type == "otr")
+                {
+                    playerOrder.AddLast(new OneThirdRule(hand));
                     count++;
                 }
                 else

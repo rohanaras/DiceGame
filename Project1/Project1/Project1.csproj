@@ -43,6 +43,7 @@
     <Compile Include="Dice.cs" />
     <Compile Include="Hand.cs" />
     <Compile Include="Human.cs" />
+    <Compile Include="OneThirdRule.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="TestPlayer.cs" />
     <Compile Include="UserInterface.cs" />

@@ -96,6 +96,7 @@ namespace Project1
                 p.Roll();
             }
         }
+
         /// <summary>
         /// Sums up the number of each facevalue
         /// </summary>

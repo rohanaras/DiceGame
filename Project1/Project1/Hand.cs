@@ -13,6 +13,7 @@ namespace Project1
     public class Hand
     {
         private List<Dice> HandList;
+        private int diceType;
 
         /// <summary>
         /// creates a standard starting hand with 5 d6's
@@ -26,6 +27,7 @@ namespace Project1
         /// <param name="diceType">the type of dice used</param>
         public Hand(int handSize, int diceType)
         {
+            this.diceType = diceType;
             HandList = new List<Dice>();
             Random random = new Random();
             for (int i = 0; i < handSize; i++)
@@ -112,6 +114,15 @@ namespace Project1
         public int DiceLeft()
         {
             return HandList.Count;
+        }
+
+        /// <summary>
+        /// returns the number of faces of a die in this hand
+        /// </summary>
+        /// <returns>an int representing the number of faces</returns>
+        public int DiceType()
+        {
+            return diceType;
         }
     }
 }
