@@ -17,6 +17,10 @@ namespace Project1
         private Hand Hand;
         private string PlayerName;
         protected Hand VisibleHand;
+        protected List<int[]> betsThisRound;
+        protected List<String> playersThisRound;
+        protected Dictionary<String, int> playersDiceLeft;
+        protected int totalDiceLeft;
 
         /// <summary>
         /// creates a player object with an auto generated name
@@ -72,8 +76,14 @@ namespace Project1
         /// <summary>
         /// provides player with game state
         /// </summary>
-        public abstract void GameState(List<int[]> calls, List<string> names,
-            Dictionary<string, int> diceLeft);
+        public void GameState(List<int[]> betsThisRound, List<string> playersThisRound,
+            Dictionary<string, int> playersDiceLeft, int totalDiceLeft)
+        {
+            this.betsThisRound = betsThisRound;
+            this.playersThisRound = playersThisRound;
+            this.playersDiceLeft = playersDiceLeft;
+            this.totalDiceLeft = totalDiceLeft;
+        }
 
         /// <summary>
         /// removes a die from the player's hand
@@ -94,10 +104,10 @@ namespace Project1
         }
 
         /// <summary>
-        /// Prompts the player to make a call
+        /// Prompts the player to make a bet
         /// </summary>
-        /// <returns>returns the player's call in the form [NOD,FV]</returns>
-        public abstract int[] Call();
+        /// <returns>returns the player's bet in the form [NOD,FV]</returns>
+        public abstract int[] Bet();
 
         public virtual void RedoFaceValueBet(int FV)
         {

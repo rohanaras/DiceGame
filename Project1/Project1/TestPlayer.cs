@@ -11,16 +11,10 @@ namespace Project1
 {
     class TestPlayer : Player
     {
-        private List<int[]> calls;
 
         public TestPlayer(Hand hand) : base(hand) { }
 
-        public override void GameState(List<int[]> calls, List<string> names, Dictionary<string, int> diceLeft)
-        {
-            this.calls = calls;
-        }
-
-        public override int[] Call()
+        public override int[] Bet()
         {
             Random r = new Random();
             int betOrCall = r.Next(1, 5);
@@ -29,23 +23,23 @@ namespace Project1
                 int[] call = { -1, 2 }; //HACK might be unnecesarry now
                 return call;
             }
-            if (calls.Count != 0)
+            if (betsThisRound.Count != 0)
             {
-                int[] previous = new int[2];
-                previous[0] = calls[calls.Count - 1][0] + 1;
-                previous[1] = calls[calls.Count - 1][1] + 1;
-                if (previous[1] <= 6)
-                    return previous;
+                int[] myBet = new int[2];
+                myBet[0] = betsThisRound[betsThisRound.Count - 1][0] + 1;
+                myBet[1] = betsThisRound[betsThisRound.Count - 1][1] + 1;
+                if (myBet[1] <= 6)
+                    return myBet;
                 else
                 {
-                    previous[1] = 2;
-                    return previous;
+                    myBet[1] = 2;
+                    return myBet;
                 }
             }
             else
             {
-                int[] thisCall = {1, 2};
-                return thisCall;
+                int[] bet = {1, 2};
+                return bet;
             } 
         }
     }

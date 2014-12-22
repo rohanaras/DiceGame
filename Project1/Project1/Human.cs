@@ -19,23 +19,18 @@ namespace Project1
             this.UI = UI;
         }
 
-        public override void GameState(List<int[]> calls, List<string> names,
-            Dictionary<string, int> diceLeft)
-        {
-        }
-
-        public override int[] Call()
+        public override int[] Bet()
         {
             UI.HumanHand(base.VisibleHand.CurrentHandString());
-            int[] call = new int[2];
-            call[0] = UI.NumberOfDiceBet();
-            if (call[0] == -1)
+            int[] bet = new int[2];
+            bet[0] = UI.NumberOfDiceBet();
+            if (bet[0] == -1)
             {
-                call[1] = 2; //HACK 
-                return call;
+                bet[1] = 2; //HACK 
+                return bet;
             }
-            call[1] = UI.FaceValueBet(); 
-            return call;
+            bet[1] = UI.FaceValueBet(); 
+            return bet;
         }
 
         public override void RedoNODBet(int NOD)

@@ -22,7 +22,8 @@ namespace Project1
             LinkedList<Player> playerOrder = UI.Intro(); //player order.count must be > 2
             Stack<Player> losers = new Stack<Player>();
 
-            Dictionary<string, int> diceLeft = DiceLeft(playerOrder);
+            int totalDiceLeft = playerOrder.Count * playerOrder.First().ShowHand().DiceLeft();
+            Dictionary<string, int> playerDiceLeft = DiceLeft(playerOrder);
 
             while (playerOrder.Count > 1) //while there is no champion
             {
@@ -31,37 +32,40 @@ namespace Project1
                 int[] allDice = AllDice(playerOrder);
 
                 //First player in round fencepost
-                List<int[]> callList = new List<int[]>();
+                List<int[]> betList = new List<int[]>();
                 List<string> playerList = new List<string>();
                 UI.WhosTurn(playerOrder.First().Name());
-                playerOrder.First().GameState(callList, playerList, diceLeft);
-                int[] lastCall = new int[2];
-                int[] call = GetCall(playerOrder.First(), lastCall);
+                playerOrder.First().GameState(betList, playerList, playerDiceLeft, totalDiceLeft);
+                int[] lastBet = new int[2];
+                int[] bet = GetBet(playerOrder.First(), lastBet);
 
-                while (call[0] != -1) { //while no player has called
-                    UI.HasBet(playerOrder.First().Name(), call[1], call[0]);
-                    lastCall = MovePlayerToEnd(playerOrder, call);
+                while (bet[0] != -1) { //while no player has called
+                    UI.HasBet(playerOrder.First().Name(), bet[1], bet[0]);
+                    lastBet = MovePlayerToEnd(playerOrder, bet);
                     UI.WhosTurn(playerOrder.First().Name());
-                    UpdatePlayerGameState(callList, call, playerList, playerOrder, diceLeft);
-                    call = GetCall(playerOrder.First(), lastCall);
+                    UpdatePlayerGameState(betList, bet, playerList, playerOrder, playerDiceLeft,
+                        totalDiceLeft);
+                    bet = GetBet(playerOrder.First(), lastBet);
                 }
 
                 UI.HasCalled(playerOrder.First().Name(), playerOrder.Last().Name());
                 UI.AllHands(AllHands(playerOrder));
 
+                totalDiceLeft--;
+
                 //sequence to figure out who won
-                int totalDiceIncludeWild = allDice[lastCall[1] - 1] + allDice[0];
-                if (lastCall[0] <= totalDiceIncludeWild)
-                {//the number of dice called was less than the actual amount
+                int totalDiceIncludeWild = allDice[lastBet[1] - 1] + allDice[0];
+                if (lastBet[0] <= totalDiceIncludeWild)
+                {//the number of dice bet was less than the actual amount
                     UI.CorrectBet(playerOrder.Last().Name(), totalDiceIncludeWild, allDice[0],
-                        lastCall[1]);
-                    CurrentPlayerLost(UI, playerOrder, losers, diceLeft);
+                        lastBet[1]);
+                    CurrentPlayerLost(UI, playerOrder, losers, playerDiceLeft);
                 }
                 else
-                {//the number of dice called was greater than the actual amount
+                {//the number of dice bet was greater than the actual amount
                     UI.CorrectCall(playerOrder.First().Name(), totalDiceIncludeWild, allDice[0],
-                        lastCall[1]);
-                    LastPlayerLost(UI, playerOrder, losers, diceLeft);
+                        lastBet[1]);
+                    LastPlayerLost(UI, playerOrder, losers, playerDiceLeft);
                 }
             }
             UI.GameOver(losers);
@@ -111,80 +115,80 @@ namespace Project1
         }
 
         /// <summary>
-        /// Moves player at front of list to the end of the list. Denotes that player's call as
-        /// the last call
+        /// Moves player at front of list to the end of the list. Denotes that player's bet as
+        /// the last bet
         /// </summary>
         /// <param name="playerOrder">The list of players to be rotated</param>
-        /// <param name="lastCall">an int array with two elements [NOD, FV]</param>
-        /// <param name="call">an int array with two elements [NOD, FV]</param>
-        public static int[] MovePlayerToEnd(LinkedList<Player> playerOrder, int[] call)
+        /// <param name="bet">an int array with two elements [NOD, FV]</param>
+        /// <returns>what was the current bet [NOD, FV]</returns>
+        public static int[] MovePlayerToEnd(LinkedList<Player> playerOrder, int[] bet)
         {
             playerOrder.AddLast(playerOrder.First());
             playerOrder.RemoveFirst();
-            return call;
+            return bet;
         }
 
         /// <summary>
         /// updates player on the current gamestate so that the player can make an informed 
         /// move
         /// </summary>
-        /// <param name="callList">A list of the pervious calls in the round, newest at 
+        /// <param name="betList">A list of the pervious bets in the round, newest at 
         /// end</param>
-        /// <param name="call">an array of the last call [NOD, FV]</param>
+        /// <param name="bet">an array of the last bets [NOD, FV]</param>
         /// <param name="playerList">A list of the pervious players in the round, newest at 
         /// end</param>
         /// <param name="playerOrder">The list of all the current (not lost) players</param>
         /// <param name="diceLeft">a dictionary of all the player's name and how many dice
         /// they have left</param>
-        public static void UpdatePlayerGameState(List<int[]> callList, int[] call, List<String>
-            playerList, LinkedList<Player> playerOrder, Dictionary<string, int> diceLeft)
+        public static void UpdatePlayerGameState(List<int[]> betList, int[] bet, List<String>
+            playerList, LinkedList<Player> playerOrder, Dictionary<string, int> diceLeft, int totalDiceLeft)
         {
-            callList.Add(call);
+            betList.Add(bet);
             playerList.Add(playerOrder.Last().Name());
-            playerOrder.First().GameState(callList, playerList, diceLeft);
+            playerOrder.First().GameState(betList, playerList, diceLeft, totalDiceLeft);
         }
 
         /// <summary>
         /// Gets the call from a player and tests legality
         /// </summary>
         /// <param name="player">the player</param>
-        /// <param name="lastCall">the last call for legality purposes</param>
+        /// <param name="lastBet">the last call for legality purposes</param>
         /// <returns>an int array with two elements [NOD, FV]</returns>
-        public static int[] GetCall(Player player, int[] lastCall)
+        public static int[] GetBet(Player player, int[] lastBet)
         {
-            int[] call = null;
-            do //while call is illegal
+            int[] bet = null;
+            do //while bet is illegal
             {
-                call = player.Call();
-            } while (!LegalCall(call, lastCall));
-            return call;
+                bet = player.Bet();
+            } while (!LegalBet(bet, lastBet));
+            return bet;
         }
 
         /// <summary>
         /// determines whether the call is legal based on the last call
         /// </summary>
-        /// <param name="call">requires an array with two elements, [NOD, FV]</param>
-        /// <param name="lastCall">requires an array with two elements, [NOD, FV]</param>
+        /// <param name="bet">requires an array with two elements, [NOD, FV]</param>
+        /// <param name="lastBet">requires an array with two elements, [NOD, FV]</param>
         /// <returns>the legality</returns>
-        public static bool LegalCall(int[] call, int[] lastCall)
+        public static bool LegalBet(int[] bet, int[] lastBet)
         {
-            if (call.Length > 2) //if wrong input
-                throw new ArgumentOutOfRangeException("Call Array too big");
-            if (call[0] == -1 && lastCall[0] == 0)
+            if (bet.Length > 2) //if wrong input
+                throw new ArgumentOutOfRangeException("Bet Array too big");
+            if (bet[0] == -1 && lastBet[0] == 0)
             {
                 //TODO add a illegalCall method to Player Class and call it here
                 return false;
             }
-            if ((call[0] != -1 && call[0] < lastCall[0]) || call[0] == 0 || call[0] < -1)
+            if ((bet[0] != -1 && bet[0] < lastBet[0]) || bet[0] == 0 || bet[0] < -1)
             {
                 //TODO call player.illegal NOD
                 return false; 
             }
-            if ((call[0] != -1 && call[0] == lastCall[0] && call[1] <= lastCall[1]) ||
-                call[1] < 2 || call[1] > 6)
+            if ((bet[0] != -1 && bet[0] == lastBet[0] && bet[1] <= lastBet[1]) ||
+                bet[1] < 2 || bet[1] > 6)
             {
-                //TODO call player.illegal FV if lastCall[1] != 6
-                //TODO call player.illegal NOD if lastCall[1] == 6
+                //TODO call player.illegal FV if lastBet[1] != 6
+                //TODO call player.illegal NOD if lastBet[1] == 6
                 return false;
             }
             return true;
