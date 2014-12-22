@@ -8,7 +8,7 @@ namespace Project1
 {
     class OneThirdRule : Player
     {
-        public OneThirdRule(Hand hand) : base(hand, "DEBUG") { }
+        public OneThirdRule(Hand hand) : base(hand) { }
 
         public override int[] Bet()
         {

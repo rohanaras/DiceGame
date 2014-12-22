@@ -33,7 +33,7 @@ namespace Project1
             while (type != "done" || count <= 1)
             {
                 Hand hand = new Hand(numberOfDice, 6); //TODO: allow for other dice types
-                Console.WriteLine("[Human, TestPlayer]");
+                Console.WriteLine("[Human, TestPlayer, OneThirdRule]");
                 type = Console.ReadLine().Trim().ToLower();
                 if (type == "human")
                 {
